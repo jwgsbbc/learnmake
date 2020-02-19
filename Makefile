@@ -7,10 +7,17 @@ BUILDDIR = build
 # means that it will always be executed
 .PHONY: clean
 
-all: build/main
+all: build build/main
 
-build/main:
+build:
 	mkdir -p $(BUILDDIR)
+
+# this is a target that points to a file that is built by the command
+# by putting a dependancy here on a file (src/main.cpp) we can trigger
+# a rebuild when src/main.cpp changes! This is nice but obviously doesn't
+# cover the issue where a file referenced in src/main.cpp changes (e.g an
+# included header) ... I guess this is why we use ccache?
+build/main: src/main.cpp
 	$(CXX) $(CXXFLAGS) src/main.cpp -o build/main
 
 clean:
