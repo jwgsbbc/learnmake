@@ -3,10 +3,7 @@ class Animal
 public:
     Animal(int numLegs): numLegs(numLegs) {};
 
-    int GetNumLegs()
-    {
-        return numLegs;
-    }
+    int GetNumLegs();
 
 private:
     const int numLegs;

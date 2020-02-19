@@ -3,14 +3,18 @@ CXXFLAGS = -std=c++17 -Wall -Wno-c++17-extensions
 BUILDDIR = build
 SRCDIR = src
 
+# here we're building a list of .cpp files
+# in the src directory
+SRCS = $(shell find $(SRCDIR) -name '*.cpp')
+
 # make will think a target (e.g. build:) is already completed if a file
 # with that name exists (e.g /build ), adding .PHONY (as in phony - not real) 
 # means that it will always be executed
-.PHONY: clean all
+.PHONY: clean main
 
-all: $(BUILDDIR) $(BUILDDIR)/main
+main: $(BUILDDIR)/main
 
-# we can use a variable as a targer name!
+# we can use a variable as a target name!
 $(BUILDDIR):
 	mkdir -p $(BUILDDIR)
 
@@ -29,8 +33,8 @@ $(BUILDDIR):
 # don't care if the dir is newer, just that it exists) ("|")
 # see: https://www.gnu.org/software/make/manual/make.html#Prerequisite-Types
 #
-$(BUILDDIR)/main: $(SRCDIR)/main.cpp | $(BUILDDIR)
-	$(CXX) $(CXXFLAGS) $< -o $@
+$(BUILDDIR)/main: | $(BUILDDIR)
+	$(CXX) $(CXXFLAGS) $(SRCS) -o $@
 
 clean:
 	rm -rf $(BUILDDIR)
