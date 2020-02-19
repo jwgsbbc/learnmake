@@ -5,11 +5,12 @@ BUILDDIR = build
 # make will think a target (e.g. build:) is already completed if a file
 # with that name exists (e.g /build ), adding .PHONY (as in phony - not real) 
 # means that it will always be executed
-.PHONY: clean
+.PHONY: clean all
 
-all: build build/main
+all: $(BUILDDIR) $(BUILDDIR)/main
 
-build:
+# we can use a variable as a targer name!
+$(BUILDDIR):
 	mkdir -p $(BUILDDIR)
 
 # this is a target that points to a file that is built by the command
@@ -21,7 +22,11 @@ build:
 # here using $< (the first dependancy name) and $@ the target name we can
 # remove some duplication, also we're building up to making a pattern
 # that can be reused for lots of files
-build/main: src/main.cpp
+#
+# Here I've added the build dir as an order-only prerequsite so that the
+# date of dir is ignored when considering whether to rebuild (since we 
+# don't care if the dir is newer, just that it exists)
+$(BUILDDIR)/main: src/main.cpp | $(BUILDDIR)
 	$(CXX) $(CXXFLAGS) $< -o $@
 
 clean:
