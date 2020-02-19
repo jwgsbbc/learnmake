@@ -17,8 +17,12 @@ build:
 # a rebuild when src/main.cpp changes! This is nice but obviously doesn't
 # cover the issue where a file referenced in src/main.cpp changes (e.g an
 # included header) ... I guess this is why we use ccache?
+#
+# here using $< (the first dependancy name) and $@ the target name we can
+# remove some duplication, also we're building up to making a pattern
+# that can be reused for lots of files
 build/main: src/main.cpp
-	$(CXX) $(CXXFLAGS) src/main.cpp -o build/main
+	$(CXX) $(CXXFLAGS) $< -o $@
 
 clean:
 	rm -rf $(BUILDDIR)
